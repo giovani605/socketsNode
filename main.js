@@ -13,14 +13,15 @@ const dgram = require("dgram");
 const process = require("process");
 
 // cria o multicast socket
-const socket = dgram.createSocket({ type: "udp4", reuseAddr: true });
+const socketMulticast = dgram.createSocket({ type: "udp4", reuseAddr: true });
 
 // coloca para ele escuta na porta
-socket.bind(PORT);
-socket.on("listening", function() {
-  socket.addMembership(MULTICAST_ADDR);
-  setInterval(sendMessage, 2500);
-  const address = socket.address();
+socketMulticast.bind(PORT);
+// executa uma funcao quando ele começa a executar o multicast
+socketMulticast.on("listening", function() {
+  socketMulticast.addMembership(MULTICAST_ADDR);
+//  setInterval(sendMessage, 2500);
+  const address = socketMulticast.address();
   console.log(
     `UDP socket listening on ${address.address}:${address.port} pid: ${
       process.pid
@@ -28,13 +29,15 @@ socket.on("listening", function() {
   );
 });
 
+// envia a mensagem
 function sendMessage() {
   const message = Buffer.from(`Message from process ${process.pid}`);
-  socket.send(message, 0, message.length, PORT, MULTICAST_ADDR, function() {
+  socketMulticast.send(message, 0, message.length, PORT, MULTICAST_ADDR, function() {
     console.info(`Sending message "${message}"`);
   });
 }
 
-socket.on("message", function(message, rinfo) {
+// recebe uma mensagem
+socketMulticast.on("message", function(message, rinfo) {
   console.info(`Message from: ${rinfo.address}:${rinfo.port} - ${message}`);
 });
