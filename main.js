@@ -4,14 +4,16 @@ var estado = 1;
 // 2 - WANTED
 // 3 - HELD
 
-// TODO fazer algo apra ler do teclado para eu poder sair do programa
-// e entrar e sair da SC
+// Mapa com os peer que encontrei na rede
+var MapaRede = new Map();
+
 
 const MULTICAST_PORT = 20000;
 const MULTICAST_ADDR = "233.255.255.255";
 
 const dgram = require("dgram");
 const process = require("process");
+var Peer = require("./peer");
 
 // cria o multicast socket
 const socketMulticast = dgram.createSocket({ type: "udp4", reuseAddr: true });
@@ -32,7 +34,7 @@ socketMulticast.on("listening", function () {
     }`
   );
   sendMessage(
-    { "tipo": "um", "msg": "teste3" }
+    { "tipo": "novo", "processId": process.ppid, "chave": 1, "porta": 1 }
   )
 });
 
@@ -53,13 +55,22 @@ socketMulticast.on("message", function (message, rinfo) {
     return;
   }
   // novo peer
+  // adiciona o peer na rede de conhecidos
   if (dados.tipo == "novo") {
-    // adiciona o peer na rede de conhecidos
+    key = dados.processId + rinfo.address;
+    console.log(key);
+    let a = new Peer(dados.porta, dados.processId, dados.chave, rinfo.address);
+    MapaRede.set(key, a);
+    console.log(a);
     return;
   }
   // saida de peer
   if (dados.tipo == "sair") {
     // remove o peer na rede de conhecidos
+    let processId = dados.processId;
+    let key = dados.processId + rinfo.address;
+    let a = MapaRede.delete(key);
+    console.log(a);
     return;
   }
 
@@ -86,12 +97,19 @@ printarComandos();
 function printarComandos() {
   console.log("Comandos Disponiveis: sair entrar leave ajuda")
 }
+function SairRede(){
+  sendMessage(
+    { "tipo": "sair", "processId": process.ppid, "chave": 1 }
+  )
 
+  // enviar mensagem de sair
+}
 // Crio uma funcao de CallBack para o evento de o usuario digitar alguma coisa
 var funcQuestao = (answer) => {
   // TODO: Log the answer in a database
   console.log(`Thank you for your valuable feedback: ${answer}`);
   if (answer == "sair") {
+    SairRede();
     rl.close();
     // TODO forçar a saida do programa
     return;
