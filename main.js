@@ -18,6 +18,7 @@ const socketMulticast = dgram.createSocket({ type: "udp4", reuseAddr: true });
 // coloca para ele escuta na porta
 socketMulticast.bind(PORT);
 // executa uma funcao quando ele começa a executar o multicast
+// executada apenas uma vez
 socketMulticast.on("listening", function() {
   socketMulticast.addMembership(MULTICAST_ADDR);
 //  setInterval(sendMessage, 2500);
@@ -39,5 +40,15 @@ function sendMessage() {
 
 // recebe uma mensagem
 socketMulticast.on("message", function(message, rinfo) {
+  // processar a mensagem
+// novo peer
+
+// saida de peer
+
+// entrar 
+
+// sair da zona SC?
   console.info(`Message from: ${rinfo.address}:${rinfo.port} - ${message}`);
 });
+
+
