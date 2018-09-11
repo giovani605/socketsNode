@@ -14,6 +14,7 @@ const MULTICAST_ADDR = "233.255.255.255";
 const dgram = require("dgram");
 const process = require("process");
 var Peer = require("./peer");
+var serverUnicast = require("./server");
 
 // cria o multicast socket
 const socketMulticast = dgram.createSocket({ type: "udp4", reuseAddr: true });
@@ -104,6 +105,12 @@ function SairRede(){
 
   // enviar mensagem de sair
 }
+function EntrarSC(){
+  // mandar uma mensagem para todos os peer conhecidos
+  for(let p in MapaRede ){
+      // criar uma conexao tcp e esperar resposta
+  }
+}
 // Crio uma funcao de CallBack para o evento de o usuario digitar alguma coisa
 var funcQuestao = (answer) => {
   // TODO: Log the answer in a database
@@ -115,6 +122,7 @@ var funcQuestao = (answer) => {
     return;
   }
   if (answer == "entrar") {
+    EntrarSC();
     rl.close();
     // TODO envia uma mensagem para entrar na SC
     return;
