@@ -7,7 +7,6 @@ var estado = 1;
 // Mapa com os peer que encontrei na rede
 var MapaRede = new Map();
 
-
 const MULTICAST_PORT = 20000;
 const MULTICAST_ADDR = "233.255.255.255";
 
