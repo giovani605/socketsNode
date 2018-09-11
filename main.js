@@ -6,10 +6,7 @@ var estado = 1;
 
 // Mapa com os peer que encontrei na rede
 var MapaRede = new Map();
-
-const MULTICAST_PORT = 20000;
-const MULTICAST_ADDR = "233.255.255.255";
-
+const variaveis = require("./variaveisGlobais");
 const dgram = require("dgram");
 const process = require("process");
 var Peer = require("./peer");
@@ -19,13 +16,13 @@ var serverUnicast = require("./server");
 const socketMulticast = dgram.createSocket({ type: "udp4", reuseAddr: true });
 
 // coloca para ele escuta na porta
-socketMulticast.bind(MULTICAST_PORT);
+socketMulticast.bind(variaveis.MULTICAST_PORT);
 
 // Eventos da Rede
 // executa uma funcao quando ele começa a executar o multicast
 // executada apenas uma vez
 socketMulticast.on("listening", function () {
-  socketMulticast.addMembership(MULTICAST_ADDR);
+  socketMulticast.addMembership(variaveis.MULTICAST_ADDR);
   //  setInterval(sendMessage, 2500);
   const address = socketMulticast.address();
   console.log(
