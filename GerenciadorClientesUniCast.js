@@ -7,6 +7,11 @@ var net = require('net');
 var HOST = 'localhost';
 
 var ListaClientes = [];
+var events = require('events');
+//usar esse emissor para cada vez q receber uma resposta do cliente
+var eventos =  new events.EventEmitter();
+
+eventos.on("resposta",processarResposta);
 
 // cliente
 function criarCliente(host, porta) {
@@ -24,6 +29,10 @@ function criarCliente(host, porta) {
         if (data.toString().endsWith('exit')) {
             client.destroy();
         }
+        // a resposta esta ok
+        // incluir parametros depois
+        eventos.emit("resposta");
+
     });
     // Add a 'close' event handler for the client socket
     client.on('close', function () {
@@ -46,7 +55,9 @@ function EntradaSC() {
 }
 
 
+function processarResposta(){
 
+}
 
 
 
