@@ -32,7 +32,7 @@ socketMulticast.on("listening", function () {
     }`
   );
   sendMessage(
-    { "tipo": "novo", "processId": process.ppid, "chave": 1, "porta": 1 }
+    { "tipo": "novo", "processId": process.ppid, "chave": variaveis.chave, "porta": 1 }
   )
 });
 
@@ -57,6 +57,11 @@ socketMulticast.on("message", function (message, rinfo) {
   // novo peer
   // adiciona o peer na rede de conhecidos
   if (dados.tipo == "novo") {
+    if(dados.chave == variaveis.chave){
+      // eh minha propria mensagem
+      return;
+    }
+
     key = dados.processId + rinfo.address;
     console.log(key);
     let a = new Peer(dados.porta, dados.processId, dados.chave, rinfo.address);
