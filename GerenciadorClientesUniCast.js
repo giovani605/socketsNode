@@ -47,10 +47,13 @@ function criarCliente(host, porta) {
 }
 // crio os clientes para entrar na SC e agurdo reposta
 // emitir eventos de sucesso ou nao da secao critica
-function EntradaSC() {
-    // criar um cliente para cada no
-        // tentar conexao com cada no
-        // processar a resposta 
+function entradaSC(mapa) {
+    console.log("cheguei aqui")
+    for(let p in mapa ){
+        // criar uma conexao tcp e esperar resposta
+        criarCliente(p.host,p.porta);
+    }
+    // setar o timer
     
 }
 
@@ -60,4 +63,4 @@ function processarResposta(){
 }
 
 
-
+exports.entrarSC = entradaSC;

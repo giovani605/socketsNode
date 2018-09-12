@@ -11,6 +11,7 @@ const dgram = require("dgram");
 const process = require("process");
 var Peer = require("./peer");
 var serverUnicast = require("./server");
+var gerenciadorUnicast = require("./GerenciadorClientesUniCast");
 
 // cria o multicast socket
 const socketMulticast = dgram.createSocket({ type: "udp4", reuseAddr: true });
@@ -37,7 +38,9 @@ socketMulticast.on("listening", function () {
 
 // envia a mensagem
 function sendMessage(mensagem) {
-  socketMulticast.send(JSON.stringify(mensagem), 0, JSON.stringify(mensagem).length, MULTICAST_PORT, MULTICAST_ADDR, function () {
+  // Envia uma mensagem para o multicast
+  socketMulticast.send(JSON.stringify(mensagem), 0, JSON.stringify(mensagem).length,
+   variaveis.MULTICAST_PORT, variaveis.MULTICAST_ADDR, function () {
     console.info(`Sending message "${mensagem}"`);
   });
 }
@@ -70,12 +73,6 @@ socketMulticast.on("message", function (message, rinfo) {
     console.log(a);
     return;
   }
-
-  // entrar 
-  if (dados.tipo == "entrar") {
-    // responder o peer de acordo com o meu estado
-    return;
-  }
   // sair da zona SC?
   // acredito   que nao precisa
 
@@ -103,9 +100,7 @@ function SairRede(){
 }
 function EntrarSC(){
   // mandar uma mensagem para todos os peer conhecidos
-  for(let p in MapaRede ){
-      // criar uma conexao tcp e esperar resposta
-  }
+  gerenciadorUnicast.entrarSC(MapaRede);
 }
 // Crio uma funcao de CallBack para o evento de o usuario digitar alguma coisa
 var funcQuestao = (answer) => {
