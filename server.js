@@ -51,19 +51,45 @@ function onClientConnected(sock) {
                 reposta = {
                     "permissao": true
                 }
+                sock.write(JSON.stringify(reposta));
             }
             // ver como tratar esse estado
             if (variaveis.estado == 2) {
-                reposta = {
-                    "permissao": false
+                var resposta;
+                // se eu tiver a preferencia
+                // Testar
+                if (dados.Ti > variaveis.tempo) {
+                    // enfilerar pedido
+                    variaveis.eventos.on("SairSC", () => {
+                        console.log("repondendo interresse");
+                        reposta = {
+                            "permissao": true
+                        }
+                        sock.write(JSON.stringify(reposta));
+                    })
+                    reposta = {
+                        "permissao": false
+                    }
+                } else {
+                    // se ele tiver a preferencia
+                    reposta = {
+                        "permissao": true
+                    }
                 }
+                sock.write(JSON.stringify(reposta));
             }
             if (variaveis.estado == 3) {
-                reposta = {
-                    "permissao": false
-                }
+                // criar um evento para sair do SC e responder
+                console.log("registrado interresse");
+                variaveis.eventos.on("SairSC", () => {
+                    console.log("repondendo interresse");
+                    reposta = {
+                        "permissao": true
+                    }
+                    sock.write(JSON.stringify(reposta));
+                })
+
             }
-            sock.write(JSON.stringify(reposta));
             return;
         }
 

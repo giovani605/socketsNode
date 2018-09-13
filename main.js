@@ -104,9 +104,31 @@ function SairRede(){
 
   // enviar mensagem de sair
 }
+
 function EntrarSC(){
+  variaveis.estado = 2;
+  terminou = false;
+  
+  
   // mandar uma mensagem para todos os peer conhecidos
   gerenciadorUnicast.entrarSC(variaveis.mapa);
+  gerenciadorUnicast.eventos.on("sucesso", () => {
+    console.log("Sucesso em entrar na Secao critica");
+    variaveis.estado = 3;
+    setTimeout(()=>{
+      console.log("sainda da secao critica");
+      variaveis.estado = 1;
+      variaveis.eventos.emit("SairSC");
+      loop();
+    },variaveis.tempo);
+    
+    
+  });
+  gerenciadorUnicast.eventos.on("fracasso", () => {
+    console.log("Falha em entrar na Secao critica");
+    variaveis.estado = 1;
+    loop();
+  });
   // verificar como vou retornar tudo isso
 }
 // Crio uma funcao de CallBack para o evento de o usuario digitar alguma coisa
@@ -132,10 +154,13 @@ var funcQuestao = (answer) => {
   if (answer == "ajuda") {
     rl.close();
     printarComandos();
+    loop();
     return;
   }
   // faço a questao denovo no final para ficar em loop infinito
+  
+}
+function loop(){
   rl.question('Oq fazer? ', funcQuestao);
 }
-
-rl.question('Oq fazer? ', funcQuestao);
+loop();

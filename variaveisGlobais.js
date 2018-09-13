@@ -4,6 +4,7 @@ const os = require("os");
 const network = os.networkInterfaces();
 var Random = require("random-js");
 var r = new Random();
+var events = require('events');
 if (process.argv[2] == null) {
     var PORT = r.integer(2000,60000);
 } else {
@@ -23,6 +24,8 @@ var estado = 1;
 // 2 - WANTED
 // 3 - HELD
 var MapaRede = new Map();
+var eventos =  new events.EventEmitter();
+var tempo = r.integer(1000,20000);
 
 exports.PORT = PORT;
 exports.MULTICAST_ADDR = MULTICAST_ADDR;
@@ -30,3 +33,5 @@ exports.MULTICAST_PORT = MULTICAST_PORT;
 exports.chave = chave;
 exports.estado = estado;
 exports.mapa = MapaRede;
+exports.eventos = eventos;
+exports.tempo = tempo;

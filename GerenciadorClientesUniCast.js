@@ -5,6 +5,7 @@
 var net = require('net');
 
 var HOST = 'localhost';
+const variaveis = require("./variaveisGlobais");
 
 var ListaClientes = [];
 var events = require('events');
@@ -31,8 +32,9 @@ function entradaSC(mapa) {
     contador = 0;
     mape = mapa;
     console.log("Iniciando conexao com os peer")
+    
     mape.forEach(element => {
-        console.log("tentando conectar peer " + element);
+        element.tempo = variaveis.tempo;
         criarCliente(element.ip,element.porta,element);
     });
     // setar o timer
@@ -48,7 +50,8 @@ function criarCliente(host, porta,itemMapa) {
     client.connect(porta, host, function () {
         console.log('Conexao criada com o peer ' + host + ':' + porta);
         let dados = {
-            "tipo" : "SC"
+            "tipo" : "SC",
+            "Ti" : itemMapa.tempo
         }
         // Manda mensagem para o peer
         client.write(JSON.stringify(dados));
@@ -67,10 +70,10 @@ function criarCliente(host, porta,itemMapa) {
             if(contador == mape.size){
                 eventos.emit("sucesso");
             }
-
+            client.destroy();
         }
         if(dados.permissao == false){
-            eventos.emit("fracasso");
+            console.log("Há processos na sua frente, espere");    
         }
 
         // if (data.toString().endsWith('exit')) {
