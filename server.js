@@ -2,7 +2,7 @@
 "use strict"
 
 const variaveis = require("./variaveisGlobais");
-
+var gerenciadorUnicast = require("./GerenciadorClientesUniCast");
 // Server
 var net = require('net');
 const process = require("process");
@@ -17,7 +17,6 @@ server.listen(variaveis.PORT, HOST, function () {
 });
 
 // toda vez que um cliente conecta essa funcao eh chamada
-// 
 function onClientConnected(sock) {
 
     // autenticar a conexao 
@@ -27,11 +26,49 @@ function onClientConnected(sock) {
 
     sock.on('data', function (data) {
         // aqui vou processar as mensagens
-        // pode ser resposta da entrada da rede
-        // ou pode ser a parte de permitir a SC
         console.log('%s Says: %s', remoteAddress, data);
-        sock.write(data);
-        sock.write(' exit');
+        let dados = JSON.parse(data);
+        if (dados.tipo == null) {
+            // Falha
+            return;
+        }
+        // pode ser resposta da entrada da rede
+        if (dados.tipo == "rede") {
+            // criar um novo item na rede
+
+            key = dados.processId + rinfo.address;
+            console.log(key);
+            let a = new Peer(dados.porta, dados.processId, dados.chave, sock.remoteAddress);
+            MapaRede.set(key, a);
+            console.log(a);
+            console.log("Resposta do multicast com sucesso")
+
+            return;
+        }
+        if (dados.tipo == "SC") {
+            // Permitir entrada SC
+            var reposta;
+            if (variaveis.estado == 1) {
+                reposta = {
+                    "permissao": true
+                }
+            }
+            // ver como tratar esse estado
+            if (variaveis.estado == 2) {
+                reposta = {
+                    "permissao": false
+                }
+            }
+            if (variaveis.estado == 3) {
+                reposta = {
+                    "permissao": false
+                }
+            }
+            sock.write(JSON.stringify(reposta));
+            return;
+        }
+
+        // ou pode ser a parte de permitir a SC
     });
     sock.on('close', function () {
         console.log('connection from %s closed', remoteAddress);

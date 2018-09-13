@@ -1,8 +1,5 @@
 // arquivo principal
-var estado = 1;
-// 1 - RELEASED
-// 2 - WANTED
-// 3 - HELD
+
 
 // Mapa com os peer que encontrei na rede
 var MapaRede = new Map();
@@ -32,7 +29,7 @@ socketMulticast.on("listening", function () {
     }`
   );
   sendMessage(
-    { "tipo": "novo", "processId": process.ppid, "chave": variaveis.chave, "porta": 1 }
+    { "tipo": "novo", "processId": process.ppid, "chave": variaveis.chave, "porta": variaveis.PORT }
   )
 });
 
@@ -66,6 +63,12 @@ socketMulticast.on("message", function (message, rinfo) {
     let a = new Peer(dados.porta, dados.processId, dados.chave, rinfo.address);
     MapaRede.set(key, a);
     console.log(a);
+    gerenciadorUnicast.responderMulticast(rinfo.address,dados.porta,{
+      "chave" : variaveis.chave,
+      "porta" : variaveis.PORT,
+      "processId" : process.ppid,
+      "tipo" : "rede"
+    });
     return;
   }
   // saida de peer
@@ -105,6 +108,7 @@ function SairRede(){
 function EntrarSC(){
   // mandar uma mensagem para todos os peer conhecidos
   gerenciadorUnicast.entrarSC(MapaRede);
+  // verificar como vou retornar tudo isso
 }
 // Crio uma funcao de CallBack para o evento de o usuario digitar alguma coisa
 var funcQuestao = (answer) => {
