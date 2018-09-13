@@ -157,6 +157,19 @@ var funcQuestao = (answer) => {
     loop();
     return;
   }
+  if (answer == "1") {
+    rl.close();
+    variaveis.estado = 1;
+    loop();
+    return;
+  }
+  if (answer == "2") {
+    rl.close();
+    variaveis.estado = 2;
+    loop();
+    return;
+  }
+
   // faço a questao denovo no final para ficar em loop infinito
   
 }
