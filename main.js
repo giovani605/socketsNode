@@ -58,7 +58,6 @@ socketMulticast.on("message", function (message, rinfo) {
   // adiciona o peer na rede de conhecidos
   if (dados.tipo == "novo") {
     if(dados.chave == variaveis.chave){
-      // eh minha propria mensagem
       return;
     }
 

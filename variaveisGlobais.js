@@ -2,8 +2,10 @@
 const process = require("process");
 const os = require("os");
 const network = os.networkInterfaces();
+var Random = require("random-js");
+var r = new Random();
 if (process.argv[2] == null) {
-    var PORT = 1234;
+    var PORT = r.integer(2000,60000);
 } else {
     var PORT = process.argv[2];
 }
@@ -14,7 +16,7 @@ function  gerarChavePublica(){
     return process.ppid+ (new Date().toString);
 }
 const chave = gerarChavePublica();
-
+console.log(PORT);
 
 exports.PORT = PORT;
 exports.MULTICAST_ADDR = MULTICAST_ADDR;

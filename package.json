@@ -20,5 +20,7 @@
     "url": "https://github.com/giovani605/socketsNode/issues"
   },
   "homepage": "https://github.com/giovani605/socketsNode#readme",
-  "dependencies": {}
+  "dependencies": {
+    "random-js": "^1.0.8"
+  }
 }
