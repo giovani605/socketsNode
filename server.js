@@ -1,6 +1,6 @@
 // esse arquivo cuida das conexoes tcp
 "use strict"
-
+var Peer = require("./peer");
 const variaveis = require("./variaveisGlobais");
 var gerenciadorUnicast = require("./GerenciadorClientesUniCast");
 // Server
@@ -35,14 +35,13 @@ function onClientConnected(sock) {
         // pode ser resposta da entrada da rede
         if (dados.tipo == "rede") {
             // criar um novo item na rede
-
-            key = dados.processId + rinfo.address;
+            var key = dados.processId + sock.remoteAddress;
             console.log(key);
             let a = new Peer(dados.porta, dados.processId, dados.chave, sock.remoteAddress);
-            MapaRede.set(key, a);
+            // passar o mapa para as variaveis globais
+            variaveis.mapa.set(key, a);
             console.log(a);
             console.log("Resposta do multicast com sucesso")
-
             return;
         }
         if (dados.tipo == "SC") {

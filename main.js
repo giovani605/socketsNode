@@ -2,7 +2,6 @@
 
 
 // Mapa com os peer que encontrei na rede
-var MapaRede = new Map();
 const variaveis = require("./variaveisGlobais");
 const dgram = require("dgram");
 const process = require("process");
@@ -61,7 +60,7 @@ socketMulticast.on("message", function (message, rinfo) {
     key = dados.processId + rinfo.address;
     console.log(key);
     let a = new Peer(dados.porta, dados.processId, dados.chave, rinfo.address);
-    MapaRede.set(key, a);
+    variaveis.mapa.set(key, a);
     console.log(a);
     gerenciadorUnicast.responderMulticast(rinfo.address,dados.porta,{
       "chave" : variaveis.chave,
@@ -76,7 +75,7 @@ socketMulticast.on("message", function (message, rinfo) {
     // remove o peer na rede de conhecidos
     let processId = dados.processId;
     let key = dados.processId + rinfo.address;
-    let a = MapaRede.delete(key);
+    let a = variaveis.mapa.delete(key);
     console.log(a);
     return;
   }
@@ -100,20 +99,19 @@ function printarComandos() {
 }
 function SairRede(){
   sendMessage(
-    { "tipo": "sair", "processId": process.ppid, "chave": 1 }
+    { "tipo": "sair", "processId": process.ppid, "chave": variaveis.chave }
   )
 
   // enviar mensagem de sair
 }
 function EntrarSC(){
   // mandar uma mensagem para todos os peer conhecidos
-  gerenciadorUnicast.entrarSC(MapaRede);
+  gerenciadorUnicast.entrarSC(variaveis.mapa);
   // verificar como vou retornar tudo isso
 }
 // Crio uma funcao de CallBack para o evento de o usuario digitar alguma coisa
 var funcQuestao = (answer) => {
   // TODO: Log the answer in a database
-  console.log(`Thank you for your valuable feedback: ${answer}`);
   if (answer == "sair") {
     SairRede();
     rl.close();

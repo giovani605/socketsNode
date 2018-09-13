@@ -23,12 +23,28 @@ function fracasso(){
     // alguma coisa deve ser feita
 }
 
-
+var mape;
+// crio os clientes para entrar na SC e agurdo reposta
+// emitir eventos de sucesso ou nao da secao critica
+// TODO limpar essa parte do codigo, colocar variaveis.mapa
+function entradaSC(mapa) {
+    contador = 0;
+    mape = mapa;
+    console.log("Iniciando conexao com os peer")
+    mape.forEach(element => {
+        console.log("tentando conectar peer " + element);
+        criarCliente(element.ip,element.porta,element);
+    });
+    // setar o timer
+    
+}
 var contador = 0;
 // cliente
 function criarCliente(host, porta,itemMapa) {
+    host = "localhost";
     var client = new net.Socket();
     ListaClientes.push(client);
+    console.log("Criando conexao com para SC -- " + host + ":"+porta);
     client.connect(porta, host, function () {
         console.log('Conexao criada com o peer ' + host + ':' + porta);
         let dados = {
@@ -77,30 +93,20 @@ function criarCliente(host, porta,itemMapa) {
 
 }
 // deixar isso aqui menos feio depois
-var mape;
-// crio os clientes para entrar na SC e agurdo reposta
-// emitir eventos de sucesso ou nao da secao critica
-function entradaSC(mapa) {
-    contador = 0;
-    mape = mapa;
-    console.log("Iniciando conexao com os peer")
-    mape.forEach(element => {
-        console.log("tentando conectar peer " + element);
-        criarCliente(element.host,element.porta,element);
-    });
-    // setar o timer
-    
-}
 
+
+// Respondo a entrada de alguem novo no multicast com meus dados
 function criarClienteRede(host, porta,dados) {
     // os dados ja vem em formanto JSON
+    host = "localhost";
     var client = new net.Socket();
-    console.log(host + ":"+porta);
+    console.log("Respondendo multicast -- " + host + ":"+porta);
     client.connect(porta, host, function () {
         console.log('Conexao criada com o peer ' + host + ':' + porta);
-        // Manda mensagem para o peer com meus dado
+        // Manda mensagem para o peer com meus dados
         client.write(JSON.stringify(dados));
         // fecha a conexao
+        //client.destroy();
     });
     // Add a 'close' event handler for the client socket
     client.on('close', function () {

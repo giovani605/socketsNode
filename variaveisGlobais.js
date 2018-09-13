@@ -22,10 +22,11 @@ var estado = 1;
 // 1 - RELEASED
 // 2 - WANTED
 // 3 - HELD
-
+var MapaRede = new Map();
 
 exports.PORT = PORT;
 exports.MULTICAST_ADDR = MULTICAST_ADDR;
 exports.MULTICAST_PORT = MULTICAST_PORT;
 exports.chave = chave;
 exports.estado = estado;
+exports.mapa = MapaRede;
